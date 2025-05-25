@@ -1,5 +1,5 @@
 import { ApolloServer } from '@apollo/server'
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest } from 'next/server'
 import { PrismaClient } from '@prisma/client'
 import { startServerAndCreateNextHandler } from '@as-integrations/next'
 
