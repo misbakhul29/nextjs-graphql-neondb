@@ -37,7 +37,7 @@ export default function Home() {
       </Link>
       
       <div className="space-y-4">
-        {data.posts.map((post: { id: Key | null | undefined; title: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; content: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined }) => (
+        {data.posts.map((post: { id: Key; title: string; content: string; }) => (
           <div key={post.id} className="border p-4 rounded">
             <h2 className="text-xl font-semibold">{post.title}</h2>
             <div className="mt-4 flex gap-2">
