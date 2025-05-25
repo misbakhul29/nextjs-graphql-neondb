@@ -1,6 +1,7 @@
 import { ApolloServer } from '@apollo/server'
-import { startServerAndCreateNextHandler } from '@as-integrations/next'
+import { NextRequest, NextResponse } from 'next/server'
 import { PrismaClient } from '@prisma/client'
+import { startServerAndCreateNextHandler } from '@as-integrations/next'
 
 const prisma = new PrismaClient()
 
@@ -30,45 +31,37 @@ const typeDefs = `#graphql
   }
 `
 
-type PostInput = {
-  title: string;
-  content: string;
-};
-
-type PostArgs = {
-  id: string;
-};
-
-type CreatePostArgs = {
-  input: PostInput;
-};
-
-type UpdatePostArgs = {
-  id: string;
-  input: PostInput;
-};
-
-type DeletePostArgs = {
-  id: string;
-};
-
 const resolvers = {
   Query: {
     posts: () => prisma.post.findMany(),
-    post: (_: unknown, { id }: PostArgs) => prisma.post.findUnique({ where: { id } }),
+    post: (_: any, { id }: { id: string }) => 
+      prisma.post.findUnique({ where: { id } }),
   },
   Mutation: {
-    createPost: (_: unknown, { input }: CreatePostArgs) => prisma.post.create({ data: input }),
-    updatePost: (_: unknown, { id, input }: UpdatePostArgs) => 
+    createPost: (_: any, { input }: { input: { title: string, content: string } }) => 
+      prisma.post.create({ data: input }),
+    updatePost: (_: any, { id, input }: { id: string, input: { title: string, content: string } }) => 
       prisma.post.update({ where: { id }, data: input }),
-    deletePost: async (_: unknown, { id }: DeletePostArgs) => {
+    deletePost: async (_: any, { id }: { id: string }) => {
       await prisma.post.delete({ where: { id } })
       return true
     }
   }
 }
 
-const server = new ApolloServer({ typeDefs, resolvers })
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+})
 
-export const GET = startServerAndCreateNextHandler(server)
-export const POST = startServerAndCreateNextHandler(server)
+const handler = startServerAndCreateNextHandler(server, {
+  context: async req => ({ req, prisma }),
+})
+
+export async function GET(request: NextRequest) {
+  return handler(request)
+}
+
+export async function POST(request: NextRequest) {
+  return handler(request)
+}
