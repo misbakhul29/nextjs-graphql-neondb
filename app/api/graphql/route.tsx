@@ -31,22 +31,35 @@ const typeDefs = `#graphql
   }
 `
 
+interface Post {
+    id: string
+    title: string
+    content: string
+    createdAt: string
+    updatedAt: string
+}
+
+interface PostInput {
+    title: string
+    content: string
+}
+
 const resolvers = {
-  Query: {
-    posts: () => prisma.post.findMany(),
-    post: (_: any, { id }: { id: string }) => 
-      prisma.post.findUnique({ where: { id } }),
-  },
-  Mutation: {
-    createPost: (_: any, { input }: { input: { title: string, content: string } }) => 
-      prisma.post.create({ data: input }),
-    updatePost: (_: any, { id, input }: { id: string, input: { title: string, content: string } }) => 
-      prisma.post.update({ where: { id }, data: input }),
-    deletePost: async (_: any, { id }: { id: string }) => {
-      await prisma.post.delete({ where: { id } })
-      return true
+    Query: {
+        posts: () => prisma.post.findMany(),
+        post: (_: Post, { id }: { id: string }) =>
+            prisma.post.findUnique({ where: { id } }),
+    },
+    Mutation: {
+        createPost: (_: PostInput, { input }: { input: PostInput }) =>
+            prisma.post.create({ data: input }),
+        updatePost: (_: PostInput, { id, input }: { id: string, input: PostInput }) =>
+            prisma.post.update({ where: { id }, data: input }),
+        deletePost: async (_: PostInput, { id }: { id: string }) => {
+            await prisma.post.delete({ where: { id } })
+            return true
+        }
     }
-  }
 }
 
 const server = new ApolloServer({
