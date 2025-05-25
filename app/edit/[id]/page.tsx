@@ -22,12 +22,7 @@ const UPDATE_POST = gql`
     }
   }
 `
-
-interface EditPostProps {
-  params: { id: string }
-}
-
-export default function EditPost({ params }: EditPostProps) {
+export default function EditPost( ) {
   const { id } = useParams();
   const { loading, error, data } = useQuery(GET_POST, { variables: { id } })
   const [updatePost] = useMutation(UPDATE_POST)
