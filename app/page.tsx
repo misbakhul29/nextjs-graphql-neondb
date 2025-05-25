@@ -1,7 +1,7 @@
 'use client'
 import { useQuery, useMutation, gql } from '@apollo/client'
 import Link from 'next/link'
-import { Key, ReactElement, JSXElementConstructor, ReactNode, ReactPortal } from 'react'
+import { Key } from 'react'
 
 const GET_POSTS = gql`
   query {
